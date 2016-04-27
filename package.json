@@ -1,0 +1,19 @@
+{
+  "name": "nodebb-plugin-expire-threads",
+  "version": "0.0.1",
+  "description": "nodebb plugin to make threads expire after a time",
+  "main": "expire-threads.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fenwick67/nodebb-plugin-expire-threads.git"
+  },
+  "author": "Drew Harwell",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/fenwick67/nodebb-plugin-expire-threads/issues"
+  },
+  "homepage": "https://github.com/fenwick67/nodebb-plugin-expire-threads#readme",
+   "nbbpm": {
+        "compatibility": "^0.8.x"
+    }
+}

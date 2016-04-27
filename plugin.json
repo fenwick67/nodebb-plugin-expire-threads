@@ -1,0 +1,9 @@
+{
+    "url": "https://github.com/fenwick67/nodebb-plugin-expire-threads",
+    "library": "./expire-threads.js",
+    "hooks": [
+        { "hook": "filter:topic.get", "method": "filterTopic" },
+        { "hook": "filter:topics.get", "method": "filterTopics" },
+        { "hook": "filter:category.topics.get", "method": "filterCategoryTopics" }
+    ]
+}
