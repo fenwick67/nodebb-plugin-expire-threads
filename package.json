@@ -17,7 +17,6 @@
     "compatibility": "^0.8.x"
   },
   "dependencies": {
-    "async": "^2.0.0-rc.3",
-    "lodash": "^4.11.1"
+    "async": "^1.x.x"
   }
 }

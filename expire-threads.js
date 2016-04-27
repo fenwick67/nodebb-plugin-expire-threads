@@ -2,7 +2,6 @@ var envVar = process.env.TOPIC_EXPIRE_DAYS;
 var expireMs = 0;
 var Topics = module.parent.require('./topics');
 const async = require('async');
-const _ = require('lodash');
 
 
 if (Number(envVar) && Number(envVar) > 0){
@@ -19,9 +18,9 @@ var Plugin = {
         if (expireMs){
             console.log('filterTopic:',thread);
             
-            if(isExpired(thread.lastposttime)){
+            if(isExpired(thread.lastposttime) && !isDeleted(thread)){
                 deleteThread(thread,function(){
-                    return next(new Error("We're sorry, that thread is past expiration and is is deleted.  Sorry for the inconvenience."),thread);
+                    return next(new Error("We're sorry, that thread is past expiration and was deleted.  Sorry for the inconvenience."),thread);
                 });
             }else{
                 return next(null,thread);
@@ -36,21 +35,20 @@ var Plugin = {
         if (expireMs){
             console.log('filterTopics:',data);
             
-            var newTopics = [];
+            //var newTopics = [];
             var toArchive = [];
             
             data.topics.forEach(function(thread){
-                if (isExpired(thread.lastposttime) ){
-                    //don't push it
+                if (isExpired(thread.lastposttime) && !isDeleted(thread) ){
+                    //delete it in a minute
                     toArchive.push(thread);
                 }else{
-                    newTopics.push(thread)
+                    //newTopics.push(thread);
                 }
             });
             
             //archive em
             async.each(toArchive,deleteThread,function(err){
-                _.extend(data,{topics:newTopics});
                 return next(err,data);
             });
             
@@ -69,7 +67,9 @@ module.exports = Plugin;
 
 //determine whether something is expired
 function isExpired(timestamp){
+    
     if (!expireMs){
+        
         return false;//not expired
     }
     
@@ -83,6 +83,11 @@ function isExpired(timestamp){
     }else{
         return false;
     }
+}
+
+//check the 'deleted' property
+function isDeleted(thread){
+    return !!thread.deleted;
 }
 
 //works with async :)
