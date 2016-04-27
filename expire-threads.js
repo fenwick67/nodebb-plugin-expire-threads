@@ -2,6 +2,7 @@ var envVar = process.env.TOPIC_EXPIRE_DAYS;
 var expireMs = 0;
 var Topics = module.parent.require('./topics');
 const async = require('async');
+const _ = require('lodash');
 
 
 if (Number(envVar) && Number(envVar) > 0){
@@ -35,22 +36,24 @@ var Plugin = {
         if (expireMs){
             console.log('filterTopics:',data);
             
-            var newData = [];
+            var newTopics = [];
             var toArchive = [];
             
-            data.forEach(function(thread){
+            data.topics.forEach(function(thread){
                 if (isExpired(thread.lastposttime) ){
                     //don't push it
                     toArchive.push(thread);
                 }else{
-                    newData.push(thread)
+                    newTopics.push(thread)
                 }
             });
             
             //archive em
             async.each(toArchive,deleteThread,function(err){
-                return next(err,newData);
+                _.extend(data,{topics:newTopics});
+                return next(err,data);
             });
+            
             
         }else{//don't expire it and keep a'movin
             return next(null,data);
