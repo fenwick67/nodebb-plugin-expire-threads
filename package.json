@@ -13,7 +13,10 @@
     "url": "https://github.com/fenwick67/nodebb-plugin-expire-threads/issues"
   },
   "homepage": "https://github.com/fenwick67/nodebb-plugin-expire-threads#readme",
-   "nbbpm": {
-        "compatibility": "^0.8.x"
-    }
+  "nbbpm": {
+    "compatibility": "^0.8.x"
+  },
+  "dependencies": {
+    "async": "^2.0.0-rc.3"
+  }
 }
