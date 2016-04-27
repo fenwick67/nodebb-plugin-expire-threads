@@ -17,12 +17,12 @@ var Plugin = {
         //throw an error if expired and delete it :(
         if (expireMs){
             
-            console.log('filterTopic:',data);
+            //console.log('filterTopic:',data);
             var thread = data.topic;
             
-            if(isExpired(thread.lastposttime) && !isDeleted(thread)){
+            if( !isDeleted(thread) && !isPinned(thread) && isExpired(thread.lastposttime) ){
                 deleteThread(thread,function(){
-                    return next(new Error("We're sorry, that thread is past expiration and was deleted.  Sorry for the inconvenience."));
+                    return next(new Error("We're sorry, that thread is past expiry and was deleted.  Sorry for the inconvenience."));
                 });
             }else{
                 return next(null,data);
@@ -35,15 +35,14 @@ var Plugin = {
     
     filterTopics: function(data,next){
         if (expireMs){
-            console.log('filterTopics:',data);
+            //console.log('filterTopics:',data);
             
             var toArchive = [];
             
             data.topics.forEach(function(thread){
-                if (isExpired(thread.lastposttime) && !isDeleted(thread) ){
+                if ( !isDeleted(thread) && !isPinned(thread) && isExpired(thread.lastposttime) ){
                     //delete it in a minute
                     toArchive.push(thread);
-                }else{
                 }
             });
             
@@ -69,8 +68,7 @@ module.exports = Plugin;
 function isExpired(timestamp){
     
     if (!expireMs){
-        
-        return false;//not expired
+        return false;//not expired because we're not set to expire anything
     }
     
     if (!timestamp || typeof timestamp !== 'number'){
@@ -88,6 +86,11 @@ function isExpired(timestamp){
 //check the 'deleted' property
 function isDeleted(thread){
     return !!thread.deleted;
+}
+
+//check the pinned property
+function isPinned(thread){
+    return !!thread.pinned;
 }
 
 //works with async :)
