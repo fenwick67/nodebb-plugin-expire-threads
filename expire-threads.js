@@ -1,6 +1,6 @@
 var envVar = process.env.TOPIC_EXPIRE_DAYS;
 var expireMs = 0;
-var Topics = module.parent.require('./topic');
+var Topics = module.parent.require('./topics');
 const async = require('async');
 
 
