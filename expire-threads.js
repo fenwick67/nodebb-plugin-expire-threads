@@ -13,10 +13,12 @@ if (Number(envVar) && Number(envVar) > 0){
 
 var Plugin = {
     
-    filterTopic: function(thread,next) {
+    filterTopic: function(data,next) {
         //throw an error if expired and delete it :(
         if (expireMs){
-            console.log('filterTopic:',thread);
+            
+            console.log('filterTopic:',data);
+            var thread = data.topic;
             
             if(isExpired(thread.lastposttime) && !isDeleted(thread)){
                 deleteThread(thread,function(){
@@ -27,7 +29,7 @@ var Plugin = {
             }
             
         }else{//don't expire it
-            return next(null,thread);
+            return next(null,data);
         }
     },
     
@@ -35,7 +37,6 @@ var Plugin = {
         if (expireMs){
             console.log('filterTopics:',data);
             
-            //var newTopics = [];
             var toArchive = [];
             
             data.topics.forEach(function(thread){
@@ -43,7 +44,6 @@ var Plugin = {
                     //delete it in a minute
                     toArchive.push(thread);
                 }else{
-                    //newTopics.push(thread);
                 }
             });
             
@@ -93,6 +93,7 @@ function isDeleted(thread){
 //works with async :)
 function deleteThread(thread,callback){
     if (thread.tid || thread.tid === 0){
+        console.log('deleting thread '+thread.tid+' because of expiry');
         thread.deleted = true;//modify the thread by reference.
         Topics.delete(thread.tid,null,function(er,data){
             if (er){//error
