@@ -22,10 +22,10 @@ var Plugin = {
             
             if(isExpired(thread.lastposttime) && !isDeleted(thread)){
                 deleteThread(thread,function(){
-                    return next(new Error("We're sorry, that thread is past expiration and was deleted.  Sorry for the inconvenience."),thread);
+                    return next(new Error("We're sorry, that thread is past expiration and was deleted.  Sorry for the inconvenience."));
                 });
             }else{
-                return next(null,thread);
+                return next(null,data);
             }
             
         }else{//don't expire it
